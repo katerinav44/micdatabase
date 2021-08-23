@@ -49,7 +49,7 @@ def insert_file(service, title, parent_id, mime_type, filename):
     print ('An error occurred: %s' % error)
     return None
 
-@st.cache()
+#@st.cache()
 def to_bin(filename_txt, filename_png, image):
     """
     TO BIN
