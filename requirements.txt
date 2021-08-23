@@ -6,6 +6,7 @@ colorama==0.4.4
 cycler==0.10.0
 gsheetsdb==0.1.13
 google-auth-oauthlib==0.4.5
+google-api-python-client==2.15.0
 idna==2.10
 isort==5.6.4
 kiwisolver==1.2.0
