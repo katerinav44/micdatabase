@@ -5,16 +5,11 @@ from google_auth_oauthlib.flow import Flow, InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from google.auth.transport.requests import Request
-import json
-import toml
-import streamlit as st
 
 
 
 def Create_Service(client_secret_file, api_name, api_version, *scopes):
     print(client_secret_file, api_name, api_version, scopes, sep='-')
-    with open(client_secret_file, 'w') as outfile:
-        json.dump(toml.loads(*st.secrets["web"]), outfile)
     CLIENT_SECRET_FILE = client_secret_file
     API_SERVICE_NAME = api_name
     API_VERSION = api_version
