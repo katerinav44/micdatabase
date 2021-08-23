@@ -11,19 +11,7 @@ from Google import Create_Service
 from googleapiclient.http import MediaFileUpload
 from apiclient import errors
 
-
-# The CLIENT_SECRETS_FILE variable specifies the name of a file that contains
-# the OAuth 2.0 information for this application, including its client_id and
-# client_secret. You can acquire an OAuth 2.0 client ID and client secret from
-# the Google Developers Console at
-# https://console.developers.google.com/.
-# Please ensure that you have enabled the YouTube Data API for your project.
-# For more information about using OAuth2 to access the YouTube Data API, see:
-#   https://developers.google.com/youtube/v3/guides/authentication
-# For more information about the client_secrets.json file format, see:
-#   https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
 CLIENT_SECRET_FILE = 'client_secrets.json'
-
 
 def insert_file(service, title, parent_id, mime_type, filename):
   """Insert new file.
@@ -60,7 +48,7 @@ def insert_file(service, title, parent_id, mime_type, filename):
     print ('An error occurred: %s' % error)
     return None
 
-@st.cache()
+@st.cache(hash_funcs={"_thread.RLock": lambda _: None})
 def to_bin(filename_txt, filename_png, image):
     """
     TO BIN
