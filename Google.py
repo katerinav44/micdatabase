@@ -5,12 +5,19 @@ from google_auth_oauthlib.flow import Flow, InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from google.auth.transport.requests import Request
+import json
+import toml
+import streamlit as st
 
 
 
-def Create_Service(client_secret_file, api_name, api_version, *scopes):
-    print(client_secret_file, api_name, api_version, scopes, sep='-')
-    CLIENT_SECRET_FILE = client_secret_file
+def Create_Service(client_secrets, api_name, api_version, *scopes):
+    """
+    asdfasdf
+    as
+    """
+    print(client_secrets, api_name, api_version, scopes, sep='-')
+
     API_SERVICE_NAME = api_name
     API_VERSION = api_version
     SCOPES = [scope for scope in scopes[0]]
@@ -29,9 +36,9 @@ def Create_Service(client_secret_file, api_name, api_version, *scopes):
         if cred and cred.expired and cred.refresh_token:
             cred.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
+            flow = InstalledAppFlow.from_client_config({"web":client_secrets}, SCOPES)
             
-            cred = flow.run_local_server(port=80)
+            cred = flow.run_local_server()
 
         with open(pickle_file, 'wb') as token:
             pickle.dump(cred, token)

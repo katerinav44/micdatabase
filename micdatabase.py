@@ -1,17 +1,20 @@
+import datetime
+import os
+import requests
+
 import streamlit as st
 from gsheetsdb import connect
 import numpy as np
 import pandas as pd
 from PIL import Image
-import requests
-import os
 import matplotlib
 import matplotlib.pyplot as plt
-from Google import Create_Service
+#from quickstart import create_client_service as service_func
+from Google import Create_Service as service_func
 from googleapiclient.http import MediaFileUpload
 from apiclient import errors
 
-CLIENT_SECRET_FILE = 'client_secrets.json'
+
 
 def insert_file(service, title, parent_id, mime_type, filename):
   """Insert new file.
@@ -73,7 +76,7 @@ def to_bin(filename_txt, filename_png, image):
     API_NAME = 'drive'
     API_VERSION = 'v2'
     SCOPES = ['https://www.googleapis.com/auth/drive']
-    service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
+    service = service_func(st.secrets["web"], API_NAME, API_VERSION, SCOPES)
     image_folder_id = '1uTxBRSkS-E6cC71T0EOCprxwB9vtub20'
     txt_folder_id = '1JYQ79IGsjDWYn4SiMCeRc0h-KTUOyD3_'
 
@@ -123,7 +126,8 @@ def scopus_search(DOI):
     except KeyError:
         journal = ''
     try:
-        pubdate = d["search-results"]["entry"][0]['prism:coverDisplayDate']
+        pubdate_str = d["search-results"]["entry"][0]['prism:coverDisplayDate']
+        pubdate = datetime.datetime.strptime(pubdate_str, "%d %B %Y").strftime("%d/%m/%Y")
     except KeyError:
         pubdate = ''
     try:
@@ -172,7 +176,7 @@ def confirmation(DOI, image, width, depth, inlets, outlets, material1, material2
     Title, Author, pubdate, journal, citedby = scopus_search(DOI)
     article_info = [Title, Author, pubdate, journal, citedby]
     lastname = Author.split(' ')[0]
-    year = pubdate.split(' ')[2] 
+    year = pubdate[-4:] 
     filename_txt ="binary{}{}.txt".format(lastname, year)
     filename_png = "binary{}{}.png".format(lastname, year)
     r= to_bin(filename_txt, filename_png, image)
@@ -193,7 +197,7 @@ def append_new_row(new_row):
     API_NAME = 'sheets'
     API_VERSION = 'v4'
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-    service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
+    service = service_func(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
     spreadsheet_id = '1wUghvgCPVcVS6-k-vWXVdbLJUfSg0G8KwQEDCDLsPHc'
     # The A1 notation of a range to search for a logical table of data.
     # Values will be appended after the last row of the table.
