@@ -13,8 +13,7 @@ import streamlit as st
 
 def Create_Service(client_secrets, api_name, api_version, *scopes):
     """
-    asdfasdf
-    as
+    returns client service for google api
     """
     print(client_secrets, api_name, api_version, scopes, sep='-')
 

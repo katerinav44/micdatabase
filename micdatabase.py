@@ -197,7 +197,7 @@ def append_new_row(new_row):
     API_NAME = 'sheets'
     API_VERSION = 'v4'
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-    service = service_func(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
+    service = service_func(st.secrets["web"], API_NAME, API_VERSION, SCOPES)
     spreadsheet_id = '1wUghvgCPVcVS6-k-vWXVdbLJUfSg0G8KwQEDCDLsPHc'
     # The A1 notation of a range to search for a logical table of data.
     # Values will be appended after the last row of the table.
@@ -239,6 +239,26 @@ def gsheets_connect():
     
     return data
 
+def search(data):
+    """
+    Searches data in a use case by keyword
+    Displays top 5 articles which match the search and all related info from google sheets 
+    """
+    columns = ['DOI', 'Title', 'Author', 'Journal Name', 'Publication Date', 'Cited by', 'Design (bin txt)','Design (png)', 'Channel depth(μm)', 'Channel width(μm)', 'No of Inlets', 'No of Outlets', 'Material (channel)', 'Material (electrode, magnet)', 'Material (bottom)', 'Use Case', 'Keywords', 'Readout']
+    usecase = st.selectbox("Select a use case", options = ['OOC', 'POC', 'chemical analysis', 'cell analysis'])
+    data1 = data[data['Use Case']== usecase]
+    st.write(data1)
+    keys = st.text_input("Search by keywords")
+    keys_list = keys.split()
+    stuff1 = data1[data1['Keywords'].str.contains('|'.join(keys_list), case=False, na=False)]
+    st.write(stuff1)
+
+    
+        
+    
+    
+    
+
 def main():
     """
     MAIN PAGE OF THE DATABASE
@@ -246,7 +266,7 @@ def main():
     Sidebar menu.
     """
     st.title('Microfluidics Database')
-    menu = ["View data", "Add entry", "About"]
+    menu = ["View data", "Add entry","Search", "About"]
     
     data = gsheets_connect()
     choice = st.sidebar.selectbox("Menu", menu)
@@ -311,6 +331,9 @@ def main():
     elif choice== "Add entry":
         st.subheader("Add Entry")
         add_entry()
+    elif choice == "Search":
+        st.subheader("Search")
+        search(data)
     elif choice == "About":
         st.subheader("About")
         st.write("Microfluidics is a field which involves manipulating small amounts of fluids on chips measuring only a few centimeters. In this way, microfluidic chips allow complex chemical/biological processes to be performed with higher throughput, increased automation, and reduced waste. Designing a lab-on-chip device is often a tedious, trial-and-error process for scientists. The behavior of fluids in the microfluidics device depends on numerous parameters (channel dimensions, materials, number of inlets/outlets, etc.) which must be carefully selected by scientists to produce the desired readout. Machine Learning (ML) and applied optimization research have the potential to address the problem of mechanical device design. ")
