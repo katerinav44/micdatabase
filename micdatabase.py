@@ -349,7 +349,7 @@ def search(data):
     data1 = data[data["Use Case"] == usecase]
     # st.write(data1)
     keys = st.text_input("Search by keywords")
-    keys_list = keys.split(',', ' ')
+    keys_list = keys.split()
     filtered_data = data1[
         data1["Keywords"].str.contains("|".join(keys_list), case=False, na=False)
     ]
